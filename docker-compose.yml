@@ -1,0 +1,24 @@
+services:
+  # Payara 6 (Jakarta EE 10)
+  payara:
+    image: payara/server-full:6.2025.1
+    ports:
+      - "8081:8080"
+      - "8001:8000"
+    volumes:
+      - ./target/docker-javaee-demo.war:/opt/payara/deployments/docker-javaee-demo.war
+    environment:
+      - PAYARA_ARGUMENTS=--debug
+
+  # WildFly 27+ (Jakarta EE 10)
+  wildfly:
+    image: quay.io/wildfly/wildfly:27.0.1.Final-jdk17
+    ports:
+      - "8082:8080"
+      - "9990:9990"
+      - "8002:8787"
+    volumes:
+      # マウント先も正しいパス (/opt/jboss/...) に修正します
+      - ./target/docker-javaee-demo.war:/opt/jboss/wildfly/standalone/deployments/docker-javaee-demo.war
+    # 実行ファイルのパスを修正。またデバッグフラグ (--debug) も追加しておくと便利です
+    command: /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 --debug

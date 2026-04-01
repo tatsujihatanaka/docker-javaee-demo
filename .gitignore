@@ -1,16 +1,16 @@
-# Compiled class file
+# --- Maven (ビルド成果物) ---
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.restore
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# --- Compiled class files ---
 *.class
-
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
 *.jar
 *.war
 *.nar
@@ -19,6 +19,29 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# --- IDE (VS Code, IntelliJ, Eclipse) ---
+.settings/
+.project
+.classpath
+.factorypath
+.idea/
+*.iml
+*.iws
+.vscode/
+.history/
+
+# --- OS & Backup ---
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+*.swp
+
+# --- Log files ---
+*.log
 hs_err_pid*
 replay_pid*
+
+# --- Docker (必要に応じて) ---
+# .env ファイルに機密情報（パスワード等）を入れる場合はコメントアウトを外す
+# .env
