@@ -1,4 +1,28 @@
 services:
+  # MySQL 8
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: demo
+      MYSQL_USER: demo
+      MYSQL_PASSWORD: demopass
+    command: [
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci"
+    ]
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
   # Payara 6 (Jakarta EE 10)
   payara:
     image: payara/server-full:6.2025.1
@@ -9,6 +33,13 @@ services:
       - ./target/docker-javaee-demo.war:/opt/payara/deployments/docker-javaee-demo.war
     environment:
       - PAYARA_ARGUMENTS=--debug
+      - MYSQL_HOST=mysql
+      - MYSQL_DATABASE=demo
+      - MYSQL_USER=demo
+      - MYSQL_PASSWORD=demopass
+    depends_on:
+      mysql:
+        condition: service_healthy
 
   # WildFly 27+ (Jakarta EE 10)
   wildfly:
@@ -18,7 +49,15 @@ services:
       - "9990:9990"
       - "8002:8787"
     volumes:
-      # マウント先も正しいパス (/opt/jboss/...) に修正します
       - ./target/docker-javaee-demo.war:/opt/jboss/wildfly/standalone/deployments/docker-javaee-demo.war
-    # 実行ファイルのパスを修正。またデバッグフラグ (--debug) も追加しておくと便利です
-    command: /opt/jboss/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 --debug
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_DATABASE=demo
+      - MYSQL_USER=demo
+      - MYSQL_PASSWORD=demopass
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
