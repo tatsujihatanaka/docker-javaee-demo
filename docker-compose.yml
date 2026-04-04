@@ -1,5 +1,4 @@
 services:
-  # MySQL 8
   mysql:
     image: mysql:8.0
     environment:
@@ -7,15 +6,11 @@ services:
       MYSQL_DATABASE: demo
       MYSQL_USER: demo
       MYSQL_PASSWORD: demopass
-    command: [
-      "--character-set-server=utf8mb4",
-      "--collation-server=utf8mb4_unicode_ci"
-    ]
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -23,38 +18,25 @@ services:
       retries: 5
       start_period: 30s
 
-  # Payara 6 (Jakarta EE 10)
   payara:
-    image: payara/server-full:6.2025.1
+    image: payara/server-full:6.2025.1-jdk17
     ports:
       - "8081:8080"
-      - "8001:8000"
     volumes:
-      - ./target/docker-javaee-demo.war:/opt/payara/deployments/docker-javaee-demo.war
-    environment:
-      - PAYARA_ARGUMENTS=--debug
-      - MYSQL_HOST=mysql
-      - MYSQL_DATABASE=demo
-      - MYSQL_USER=demo
-      - MYSQL_PASSWORD=demopass
+      # - ./target/docker-javaee-demo.war:/opt/payara/deployments/docker-javaee-demo.war
+      - ./target/docker-javaee-demo.war:/opt/payara/appserver/glassfish/domains/domain1/autodeploy/docker-javaee-demo.war
+
+
     depends_on:
       mysql:
         condition: service_healthy
 
-  # WildFly 27+ (Jakarta EE 10)
   wildfly:
     image: quay.io/wildfly/wildfly:27.0.1.Final-jdk17
     ports:
       - "8082:8080"
-      - "9990:9990"
-      - "8002:8787"
     volumes:
       - ./target/docker-javaee-demo.war:/opt/jboss/wildfly/standalone/deployments/docker-javaee-demo.war
-    environment:
-      - MYSQL_HOST=mysql
-      - MYSQL_DATABASE=demo
-      - MYSQL_USER=demo
-      - MYSQL_PASSWORD=demopass
     depends_on:
       mysql:
         condition: service_healthy
