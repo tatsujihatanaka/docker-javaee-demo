@@ -5,14 +5,28 @@
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          metadata-complete="true">
     
-<servlet>
-        <servlet-name>DriverTest</servlet-name>
-        <servlet-class>com.example.DriverTest</servlet-class> 
-    </servlet>
+  <servlet>
+    <servlet-name>DriverTest</servlet-name>
+    <servlet-class>com.example.DriverTest</servlet-class> 
+  </servlet>
 
-    <servlet-mapping>
-        <servlet-name>DriverTest</servlet-name>
-        <url-pattern>/driver-test</url-pattern>
-    </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DriverTest</servlet-name>
+    <url-pattern>/driver-test</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>JdbcTest</servlet-name>
+    <servlet-class>com.example.JdbcTest</servlet-class> 
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>JdbcTest</servlet-name>
+    <url-pattern>/jdbc-test</url-pattern>
+  </servlet-mapping>
+
+
 
 </web-app>
+
+
